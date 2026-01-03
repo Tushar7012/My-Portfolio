@@ -88,7 +88,7 @@ This portfolio can be deployed on:
 
 1. Go to [render.com](https://render.com) and create a new Static Site
 2. Connect your GitHub repository
-3. Set build command: `npm run build`
+3. Set build command: `npm install && npm run build`
 4. Set publish directory: `build`
 5. Deploy!
 
