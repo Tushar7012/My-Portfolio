@@ -1,199 +1,296 @@
-// src/components/Projects.jsx
-
 import React from 'react';
 import { motion } from 'framer-motion';
 
-// --- Custom, Attractive SVG Icons for AI/ML Projects ---
-// These must be defined BEFORE the main Projects component.
+// Project data from GitHub repos
+const projectsData = [
+  {
+    id: 1,
+    title: 'The Neural Navigator',
+    description: 'A multi-modal neural network that takes a 128x128 RGB map image combined with text commands (e.g., "Go to the Red Circle") and predicts a sequence of 10 (x,y) coordinates representing the navigation path.',
+    longDescription: 'Built from scratch implementing CNN for visual feature extraction and text embeddings for command understanding, achieving precise coordinate predictions for autonomous navigation tasks.',
+    tags: ['PyTorch', 'CNN', 'Multi-Modal AI', 'Computer Vision', 'NLP'],
+    github: 'https://github.com/Tushar7012/The-Neural-Navigator',
+    featured: true,
+    icon: '🧭',
+    gradient: 'from-purple-500 to-blue-500',
+  },
+  {
+    id: 2,
+    title: 'DebateAI',
+    description: 'A real-time debate platform featuring User vs User and User vs AI debates with WebRTC for audio/video/text communication, LLM-generated counterarguments, and custom debate rooms.',
+    longDescription: 'Contributed to AOSSIE open-source organization. Features structured debate formats (opening, cross-exam, closing), real-time WebSocket communication, and intelligent AI opponents that adapt to user arguments.',
+    tags: ['WebRTC', 'WebSockets', 'LLM', 'React', 'MongoDB', 'Node.js'],
+    github: 'https://github.com/Tushar7012/DebateAI',
+    featured: true,
+    icon: '🎭',
+    gradient: 'from-cyan-500 to-purple-500',
+  },
+  {
+    id: 3,
+    title: 'Voice-First Government Assistant',
+    description: 'A Hindi voice-first assistant helping citizens discover government schemes. Features an agentic workflow with Planner-Executor-Evaluator loop and smart scheme matching.',
+    longDescription: 'Built with Sarvam AI for STT/TTS, Groq for LLM inference. Implements rule-based eligibility engine combined with vector search for semantic retrieval, with multi-turn conversation memory.',
+    tags: ['LangGraph', 'Sarvam AI', 'Groq', 'STT/TTS', 'Agentic AI', 'Hindi NLP'],
+    github: 'https://github.com/Tushar7012/Cred_Voice-Assistant',
+    featured: true,
+    icon: '🇮🇳',
+    gradient: 'from-orange-500 to-pink-500',
+  },
+  {
+    id: 4,
+    title: 'Leave Assistant Agent',
+    description: 'A multi-agent HR assistant with three specialized AI agents (Data, Policy, Email) working together via LangGraph orchestration for intelligent leave management.',
+    longDescription: 'Features a modern Next.js 14 frontend with streaming support, glassmorphism UI design, and real-time chat interface. Agents coordinate to handle complex HR queries autonomously.',
+    tags: ['LangGraph', 'Next.js 14', 'Multi-Agent', 'FastAPI', 'Streaming'],
+    github: 'https://github.com/Tushar7012/Leave-Assistant-Agent',
+    featured: false,
+    icon: '📋',
+    gradient: 'from-green-500 to-cyan-500',
+  },
+  {
+    id: 5,
+    title: 'Visa Prediction MLOps',
+    description: 'An end-to-end MLOps pipeline for visa certification prediction featuring modular Python packages, DVC for data versioning, MLflow for experiment tracking, and Docker containerization.',
+    longDescription: 'Complete production-ready ML system with automated training pipelines, model versioning, API deployment via FastAPI/Streamlit, and cloud deployment configurations for AWS.',
+    tags: ['Docker', 'MLflow', 'DVC', 'AWS', 'FastAPI', 'Streamlit'],
+    github: 'https://github.com/Tushar7012/Visa_Prediction_MLOperation',
+    featured: false,
+    icon: '✈️',
+    gradient: 'from-blue-500 to-indigo-500',
+  },
+];
 
-const TransformerIcon = () => (
-  <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v8m-4-4h8" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.929 4.929l1.414 1.414M17.657 17.657l1.414 1.414M4.929 19.071l1.414-1.414M17.657 6.343l1.414-1.414" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 12h-2M5 12H3M12 21v-2M12 5V3" />
-    <circle cx="12" cy="12" r="3" />
+// GitHub icon
+const GithubIcon = () => (
+  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
   </svg>
 );
 
-const AITripPlannerIcon = () => (
-    <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13v-6m0 6h6m-6 0L9 7m6 13l5.447 2.724A1 1 0 0021 20.382V9.618a1 1 0 00-1.447-.894L15 11m0 9v-6m0 6H9m0-6l6-4m-6 0l6 4" />
-    </svg>
-);
-
-const FaceMeshIcon = () => (
-  <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18V6" />
+// External link icon
+const ExternalLinkIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
   </svg>
 );
 
-const BookRecommenderIcon = () => (
-    <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"></path>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 6V4m8 2V4m-8 16v-2m8 2v-2"></path>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 14l-2-2 2-2 2 2-2 2z"></path>
-    </svg>
+// Featured Project Card (larger)
+const FeaturedProjectCard = ({ project, index }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6, delay: index * 0.1 }}
+    className="group relative glass-card overflow-hidden"
+  >
+    {/* Gradient top border */}
+    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${project.gradient}`} />
+
+    <div className="p-8">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${project.gradient} flex items-center justify-center text-2xl shadow-lg`}>
+            {project.icon}
+          </div>
+          <div>
+            <span className="px-2 py-1 text-xs font-medium bg-cyber-purple-500/20 text-cyber-purple-400 rounded-full">
+              Featured
+            </span>
+            <h3 className="text-2xl font-display font-bold text-white mt-1 group-hover:text-cyber-purple-400 transition-colors">
+              {project.title}
+            </h3>
+          </div>
+        </div>
+
+        <a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-3 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-cyber-purple-500/50 hover:bg-cyber-purple-500/10 transition-all duration-300"
+        >
+          <GithubIcon />
+        </a>
+      </div>
+
+      {/* Description */}
+      <p className="text-white/70 leading-relaxed mb-4">
+        {project.description}
+      </p>
+      <p className="text-white/50 text-sm leading-relaxed mb-6">
+        {project.longDescription}
+      </p>
+
+      {/* Tags */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {project.tags.map((tag) => (
+          <span
+            key={tag}
+            className="px-3 py-1.5 text-xs font-medium bg-white/5 border border-white/10 rounded-lg text-white/70 hover:border-cyber-purple-500/30 transition-colors"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <a
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 text-cyber-purple-400 font-medium hover:text-cyber-purple-300 transition-colors group/link"
+      >
+        <span>View on GitHub</span>
+        <ExternalLinkIcon />
+      </a>
+    </div>
+
+    {/* Hover glow effect */}
+    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-br ${project.gradient} blur-3xl -z-10`} style={{ opacity: 0.05 }} />
+  </motion.div>
 );
 
-const ChestCancerIcon = () => (
-    <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19.5 12.572l-7.5 4.33-7.5-4.33m15 0V7.428l-7.5-4.33-7.5 4.33v5.144z"></path>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 22v-6"></path>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 12l7.5-4.33"></path>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.5 7.67L12 12"></path>
-    </svg>
+// Regular Project Card
+const ProjectCard = ({ project, index }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+    className="group glass-card glass-card-hover p-6 flex flex-col h-full"
+  >
+    {/* Header */}
+    <div className="flex items-center justify-between mb-4">
+      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${project.gradient} flex items-center justify-center text-xl`}>
+        {project.icon}
+      </div>
+      <a
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/5 transition-all duration-300"
+      >
+        <GithubIcon />
+      </a>
+    </div>
+
+    {/* Title */}
+    <h3 className="text-xl font-display font-bold text-white mb-3 group-hover:text-cyber-purple-400 transition-colors">
+      {project.title}
+    </h3>
+
+    {/* Description */}
+    <p className="text-white/60 text-sm leading-relaxed mb-4 flex-grow">
+      {project.description}
+    </p>
+
+    {/* Tags */}
+    <div className="flex flex-wrap gap-1.5 mb-4">
+      {project.tags.slice(0, 4).map((tag) => (
+        <span
+          key={tag}
+          className="px-2 py-1 text-xs bg-white/5 border border-white/10 rounded text-white/60"
+        >
+          {tag}
+        </span>
+      ))}
+      {project.tags.length > 4 && (
+        <span className="px-2 py-1 text-xs text-white/40">
+          +{project.tags.length - 4}
+        </span>
+      )}
+    </div>
+
+    {/* Link */}
+    <a
+      href={project.github}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 text-sm text-cyber-purple-400 font-medium hover:text-cyber-purple-300 transition-colors"
+    >
+      <span>View Project</span>
+      <ExternalLinkIcon />
+    </a>
+  </motion.div>
 );
 
-const RagIcon = () => (
-    <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7M16 7a4 4 0 00-8 0"></path>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 11h.01"></path>
-    </svg>
-);
-
-const JobRecommenderIcon = () => (
-    <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-    </svg>
-);
-
-const VehicleInsuranceIcon = () => (
-    <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.417l5.318-5.318a2.25 2.25 0 013.182 0l5.318 5.318a12.02 12.02 0 00-1.382-9.04z"></path>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
-    </svg>
-);
-
-const ZomatoChatbotIcon = () => (
-    <svg className="w-16 h-16 mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 15a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h3l2-3h4l2 3h3a2 2 0 012 2z"></path>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 12a3 3 0 110-6 3 3 0 010 6z"></path>
-    </svg>
-);
-
-
-// --- Main Projects Component ---
 export default function Projects() {
-  const projectData = [
-    {
-      title: 'Transformer Model from Scratch',
-      description: "A from-scratch implementation of the original Transformer model from the 'Attention Is All You Need' research paper, exploring the core mechanisms of self-attention.",
-      tags: ['Python', 'TensorFlow', 'NumPy'],
-      icon: <TransformerIcon />,
-      link: 'https://github.com/Tushar7012/Attention-is-all-you-Need-Research-Paper-Implementation',
-    },
-    {
-      title: 'AI-Powered Trip Planner',
-      description: 'A generative AI application that creates personalized travel itineraries using Google\'s Gemini Pro, built with a modern Python backend and a React frontend.',
-      tags: ['LangGraph', 'LangChain', 'Streamlit', 'FastAPI'],
-      icon: <AITripPlannerIcon />,
-      link: 'https://github.com/Tushar7012/AI-TRIP-PLANNER',
-    },
-    {
-      title: 'Face Mesh Application',
-      description: 'A real-time face mesh application that detects facial landmarks and applies filters using Mediapipe and OpenCV.',
-      tags: ['Mediapipe', 'OpenCV', 'Computer Vision'],
-      icon: <FaceMeshIcon />,
-      link: 'https://github.com/Tushar7012/Facial-Detection',
-    },
-    {
-      title: 'End-to-End Chest Cancer Classification',
-      description: 'A deep learning project utilizing a CNN architecture with an end-to-end DVC pipeline for classifying chest cancer from medical images.',
-      tags: ['CNN', 'DVC', 'MLflow', 'AWS'],
-      icon: <ChestCancerIcon />,
-      link: 'https://github.com/Tushar7012/End-to-End-Chest-Cancer-Classification-Project',
-    },
-    {
-      title: 'AI-Powered Job Recommender System',
-      description: 'An intelligent system that recommends job opportunities by leveraging Multiple Candidate Paradigms (MCP) for enhanced matching accuracy.',
-      tags: ['Python', 'NLP', 'Streamlit', 'Heroku'],
-      icon: <JobRecommenderIcon />,
-      link: 'https://github.com/Tushar7012/AI-Powered-Job-Recommender-System-with-MCP',
-    },
-    {
-      title: 'End-to-End RAG Application',
-      description: 'A complete Retrieval-Augmented Generation (RAG) application that enhances language model responses with external knowledge.',
-      tags: ['RAG', 'LLM', 'MongoDB', 'FastAPI'],
-      icon: <RagIcon />,
-      link: 'https://github.com/Tushar7012/End-to-End-RAG-Application',
-    },
-    {
-      title: 'Book Recommender System',
-      description: 'A collaborative filtering-based recommender system that suggests books to users based on their reading history and preferences.',
-      tags: ['Python', 'Pandas', 'Scikit-learn'],
-      icon: <BookRecommenderIcon />,
-      link: 'https://github.com/Tushar7012/Book-Recommender-System',
-    },
-    {
-      title: 'Vehicle Insurance MLOps Pipeline',
-      description: 'An end-to-end MLOps project for predicting vehicle insurance claims, featuring a complete DVC pipeline and deployment on AWS.',
-      tags: ['Docker', 'DVC', 'MLflow', 'AWS'],
-      icon: <VehicleInsuranceIcon />,
-      link: 'https://github.com/Tushar7012/Vehicle_Insurance_MLOps',
-    },
-    {
-      title: 'Zomato Restaurant Chatbot',
-      description: 'A conversational AI chatbot that provides restaurant recommendations, leveraging a RAG pipeline with Llama2 and Langchain for intelligent, context-aware responses.',
-      tags: ['Chainlit', 'Groq'],
-      icon: <ZomatoChatbotIcon />,
-      link: 'https://github.com/Tushar7012/Zomato-Chatbot',
-    }
-  ];
+  const featuredProjects = projectsData.filter(p => p.featured);
+  const otherProjects = projectsData.filter(p => !p.featured);
 
   return (
-    <section id="projects" className="min-h-screen w-full bg-black text-white py-20 px-6 md:px-12">
-      <div className="container mx-auto">
-        
-        {/* Section Title */}
-        <motion.h2 
+    <section id="projects" className="relative py-24 px-4 md:px-8">
+      <div className="container mx-auto max-w-6xl">
+
+        {/* Section Header */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-extrabold text-center mb-16"
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
-            My Projects
+          <span className="text-cyber-purple-400 font-medium text-sm uppercase tracking-wider">
+            My Work
           </span>
-        </motion.h2>
+          <h2 className="section-title gradient-text-purple mt-2">
+            Featured Projects
+          </h2>
+          <p className="text-white/60 max-w-2xl mx-auto mt-4">
+            A collection of AI/ML projects showcasing my expertise in building intelligent systems,
+            from multi-modal neural networks to production-ready MLOps pipelines.
+          </p>
+        </motion.div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projectData.map((project, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-              viewport={{ once: true }}
-              className="group relative flex flex-col p-8 bg-black/50 border border-white/10 rounded-2xl transition-all duration-300 hover:border-purple-500 hover:shadow-2xl hover:shadow-purple-500/20"
-            >
-              {project.icon}
-              <h3 className="text-2xl font-bold mb-2 text-white">{project.title}</h3>
-              <p className="text-white/70 mb-4 flex-grow">{project.description}</p>
-              
-              <div className="flex flex-wrap gap-2 mb-6">
-                {project.tags.map((tag, tagIndex) => (
-                  <span key={tagIndex} className="px-3 py-1 bg-white/10 text-purple-300 text-xs font-medium rounded-full">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <a 
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-auto inline-block px-5 py-3 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-colors duration-300"
-              >
-                View on GitHub
-              </a>
-            </motion.div>
+        {/* Featured Projects Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+          {featuredProjects.map((project, index) => (
+            <FeaturedProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
+
+        {/* Other Projects */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <h3 className="text-xl font-display font-semibold text-white mb-6 flex items-center gap-2">
+            <span className="w-2 h-2 bg-cyber-cyan rounded-full" />
+            More Projects
+          </h3>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {otherProjects.map((project, index) => (
+            <ProjectCard key={project.id} project={project} index={index} />
+          ))}
+        </div>
+
+        {/* View All CTA */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center mt-12"
+        >
+          <a
+            href="https://github.com/Tushar7012?tab=repositories"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary inline-flex items-center gap-2"
+          >
+            <GithubIcon />
+            <span>View All Projects on GitHub</span>
+          </a>
+        </motion.div>
       </div>
+
+      {/* Background Decoration */}
+      <div className="absolute top-1/3 right-0 w-96 h-96 bg-cyber-cyan/5 rounded-full blur-[150px] pointer-events-none" />
     </section>
   );
 }
