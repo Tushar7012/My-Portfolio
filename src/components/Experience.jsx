@@ -6,7 +6,7 @@ const experienceData = [
   {
     role: 'AI Engineer',
     company: 'Naada Technology',
-    date: 'July 2025 - Present',
+    date: 'July 2025 - March 2026',
     type: 'Full-time',
     description: [
       'Architected and deployed scalable MLOps pipelines on AWS, reducing model deployment time by 40%',
